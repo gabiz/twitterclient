@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -15,14 +16,36 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
-public class Tweet implements Serializable {
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
+@Table(name = "Tweets")
+public class Tweet extends Model implements Serializable {
 
     private static final long serialVersionUID = 4249504467131192979L;
-    private String body;
+    
+    @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid;
+
+    @Column(name = "body")
+    private String body;
+    
+    @Column(name = "createdAt")
     private String createdAt;
+
+    @Column(name = "User", onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
     private User user;
+
+    @Column(name = "url")
     private String url;
+    
+    public Tweet(){
+       super();
+    }
+
     
     public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
@@ -31,8 +54,16 @@ public class Tweet implements Serializable {
             tweet.body = jsonObject.getString("text");
             tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
-            tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
-
+            User newUser = User.fromJSON(jsonObject.getJSONObject("user"));
+            User savedUser = User.byId(newUser.getUid());
+            if (savedUser != null) {
+                tweet.user = savedUser;
+            } else {
+                tweet.user = newUser;
+            }
+            
+            tweet.user.save();
+            
             JSONObject entities = jsonObject.getJSONObject("entities");
             if (entities != null && entities.has("media")) {
                 Log.d("INFO", "###################### has media");
@@ -63,7 +94,8 @@ public class Tweet implements Serializable {
 
             Tweet tweet = Tweet.fromJSON(tweetJson);
             if (tweet != null) {
-              tweets.add(tweet);
+                tweet.save();
+                tweets.add(tweet);
             }
         }
 
@@ -145,4 +177,12 @@ public class Tweet implements Serializable {
         
     }
     
+    public static Tweet byId(long uid) {
+        return new Select().from(Tweet.class).where("uid = ?", uid).executeSingle();
+    }
+
+    public static List<Tweet> recentItems() {
+        return new Select().from(Tweet.class).orderBy("uid DESC").limit("25").execute();
+    }
+
 }

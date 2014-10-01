@@ -1,6 +1,7 @@
 package com.gabiq.twitterpro.activities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 
@@ -30,6 +31,7 @@ public class TimelineActivity extends FragmentActivity {
     private TimelineAdapter aTimeline;
     private PullToRefreshListView lvTimeline;
 
+    private static boolean initialized = false;
     private static boolean refreshing = false;
     private static long maxId = 0;
     private static long sinceId = 0;
@@ -84,10 +86,26 @@ public class TimelineActivity extends FragmentActivity {
 //            }
         });
 
-
-        fetchHomeTimeline();
+//        fetchHomeTimeline();
+        
+        fetchFromDB();
     }
 
+    private void fetchFromDB() {
+        List<Tweet> newTweets = Tweet.recentItems();
+        if (newTweets.size() > 0) {
+            Tweet lastTweet = newTweets.get(newTweets.size() - 1);
+            maxId = lastTweet.getUid();
+
+            if (sinceId == 0) {
+                Tweet firstTweet = newTweets.get(0);
+                sinceId = firstTweet.getUid();
+            }
+        }
+        aTimeline.addAll(newTweets);
+        initialized = true;
+    }
+    
     protected void loadTweets(final long maxId, final long sinceId) {
         Log.d("INFO",
                 "******************* load tweets maxId="

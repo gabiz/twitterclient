@@ -62,6 +62,8 @@ public class TwitterRestClient extends OAuthBaseClient {
         String apiUrl = getApiUrl(HOME_TIMELINE_URL);
         if (maxId != 0) {
             apiUrl = apiUrl + "?max_id=" + String.valueOf(maxId);
+        } else if (sinceId != 0) {
+            apiUrl = apiUrl + "?since_id=" + String.valueOf(sinceId);
         }
         Log.d("INFO", "******************* "+apiUrl);
 

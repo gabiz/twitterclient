@@ -2,6 +2,7 @@ package com.gabiq.twitterpro;
 
 import android.content.Context;
 
+import com.activeandroid.ActiveAndroid;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -16,23 +17,26 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  *     
  */
 public class TwitterProApp extends com.activeandroid.app.Application {
-	private static Context context;
+    private static Context context;
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		TwitterProApp.context = this;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        TwitterProApp.context = this;
 
-		// Create global configuration and initialize ImageLoader with this configuration
-		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
-				cacheInMemory().cacheOnDisc().build();
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-		.defaultDisplayImageOptions(defaultOptions)
-		.build();
-		ImageLoader.getInstance().init(config);
-	}
+        // Create global configuration and initialize ImageLoader with this
+        // configuration
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory().cacheOnDisc().build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                getApplicationContext()).defaultDisplayImageOptions(
+                defaultOptions).build();
+        ImageLoader.getInstance().init(config);
+        ActiveAndroid.setLoggingEnabled(true);
+    }
 
-	public static TwitterRestClient getRestClient() {
-		return (TwitterRestClient) TwitterRestClient.getInstance(TwitterRestClient.class, TwitterProApp.context);
-	}
+    public static TwitterRestClient getRestClient() {
+        return (TwitterRestClient) TwitterRestClient.getInstance(
+                TwitterRestClient.class, TwitterProApp.context);
+    }
 }
