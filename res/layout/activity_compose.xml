@@ -14,6 +14,7 @@
         android:layout_alignParentTop="true"
         android:gravity="top"
         android:ems="10"
+        android:maxLength="140"
         android:hint="@string/compose_body_hint" >
 
         <requestFocus />

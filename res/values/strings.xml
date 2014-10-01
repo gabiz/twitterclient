@@ -13,5 +13,7 @@
     <string name="title_activity_compose">Compose Tweet</string>
     <string name="compose_body_hint">What\'s happening?</string>
     <string name="post_menu_label">TWEET</string>
+    <string name="title_activity_detail">Tweet</string>
+    <string name="count_menu_label">140</string>
 
 </resources>

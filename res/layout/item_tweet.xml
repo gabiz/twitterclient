@@ -4,14 +4,14 @@
     android:layout_height="match_parent" >
 
     <ImageView
-        android:id="@+id/ivTweetImage"
+        android:id="@+id/ivItemImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:src="@drawable/ic_launcher" />
 
     <RelativeLayout
@@ -19,14 +19,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/ivTweetImage"
+        android:layout_alignTop="@+id/ivItemImage"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_toRightOf="@+id/ivTweetImage" >
+        android:layout_toRightOf="@+id/ivItemImage" >
 
         <TextView
-            android:id="@+id/tvTweetUserName"
+            android:id="@+id/tvItemUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -34,17 +34,17 @@
             android:text="@string/foo_label" />
 
         <TextView
-            android:id="@+id/tvTweetBody"
+            android:id="@+id/tvItemBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tvTweetUserName"
+            android:layout_below="@+id/tvItemUserName"
             android:autoLink="all"
             android:linksClickable="true"
             android:text="@string/body_label" />
 
         <TextView
-            android:id="@+id/tvTweetTimestamp"
+            android:id="@+id/tvItemTimestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

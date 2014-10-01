@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 public class Tweet implements Serializable {
 
@@ -20,6 +22,7 @@ public class Tweet implements Serializable {
     private long uid;
     private String createdAt;
     private User user;
+    private String url;
     
     public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
@@ -29,6 +32,16 @@ public class Tweet implements Serializable {
             tweet.uid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+
+            JSONObject entities = jsonObject.getJSONObject("entities");
+            if (entities != null && entities.has("media")) {
+                Log.d("INFO", "###################### has media");
+                JSONArray media = entities.getJSONArray("media");
+                if (media.length() > 0) {
+                    tweet.url = ((JSONObject) media.get(0)).getString("media_url");
+                    Log.d("INFO", tweet.url);
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -68,7 +81,7 @@ public class Tweet implements Serializable {
     public String getCreatedAt() {
         return createdAt;
     }
-
+    
     public Spanned getFullName() {
         return Html.fromHtml("<b>" + user.getName() +
                 "</b><font color=\"#b0b0b0\"> @" + user.getScreenName() + "</font>");
@@ -78,30 +91,10 @@ public class Tweet implements Serializable {
         return user;
     }
     
-    
-    public static String formatRelativeTime(long interval) {
-        String timeStamp = "";
-        if (interval < 0) {
-            timeStamp = "now";
-        } else if (interval > 60*60*24*30) {
-            timeStamp = interval / (60*60*24*30) + "M";
-        } else if (interval > 60*60*24*7) {
-            timeStamp = interval / (60*60*24*7) + "w";
-        } else if (interval > 60*60*24) {
-            timeStamp = interval / (60*60*24) + "d";
-        } else if (interval > 60*60) {
-            timeStamp = interval / (60*60) + "h";
-        } else if (interval > 60) {
-            timeStamp = interval / 60 + "m";
-        } else {
-            timeStamp = interval + "s";
-        }
-        return timeStamp;
+    public String getUrl() {
+        return url;
     }
-
-    
- // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
-    public String getRelativeTimeAgo() {
+    public String getRelativeTime() {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
@@ -109,14 +102,47 @@ public class Tweet implements Serializable {
         String relativeDate = "";
         try {
             long dateMillis = sf.parse(createdAt).getTime();
-            relativeDate = formatRelativeTime(System.currentTimeMillis() / 1000 - dateMillis/1000);
-//            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-//                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+            long interval = (System.currentTimeMillis() / 1000 - dateMillis/1000);
+
+            String timeStamp = "";
+            if (interval < 0) {
+                timeStamp = "now";
+            } else if (interval > 60*60*24*30) {
+                timeStamp = interval / (60*60*24*30) + "M";
+            } else if (interval > 60*60*24*7) {
+                timeStamp = interval / (60*60*24*7) + "w";
+            } else if (interval > 60*60*24) {
+                timeStamp = interval / (60*60*24) + "d";
+            } else if (interval > 60*60) {
+                timeStamp = interval / (60*60) + "h";
+            } else if (interval > 60) {
+                timeStamp = interval / 60 + "m";
+            } else {
+                timeStamp = interval + "s";
+            }
+            relativeDate = timeStamp;
         } catch (ParseException e) {
             e.printStackTrace();
         }
      
         return relativeDate;
+        
+        
+    }
+
+    
+    public String getFormatedTime() {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        try {
+            Date date = sf.parse(createdAt);
+            return new SimpleDateFormat("hh:mm aaa á dd MMM yy").format(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return "";
+        }
+        
     }
     
 }

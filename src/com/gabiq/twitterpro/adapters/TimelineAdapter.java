@@ -30,10 +30,10 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
             
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
 
-            viewHolder.tvTweetUserName = (TextView) convertView.findViewById(R.id.tvTweetUserName);
-            viewHolder.tvTweetBody = (TextView) convertView.findViewById(R.id.tvTweetBody);
-            viewHolder.tvTweetTimestamp = (TextView) convertView.findViewById(R.id.tvTweetTimestamp);
-            viewHolder.ivTweetImage = (ImageView) convertView.findViewById(R.id.ivTweetImage);
+            viewHolder.tvItemUserName = (TextView) convertView.findViewById(R.id.tvItemUserName);
+            viewHolder.tvItemBody = (TextView) convertView.findViewById(R.id.tvItemBody);
+            viewHolder.tvItemTimestamp = (TextView) convertView.findViewById(R.id.tvItemTimestamp);
+            viewHolder.ivItemImage = (ImageView) convertView.findViewById(R.id.ivItemImage);
 
             convertView.setTag(viewHolder);
         } else {
@@ -41,19 +41,19 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
         }
         
         
-        viewHolder.tvTweetUserName.setText(tweet.getFullName());
-        viewHolder.tvTweetBody.setText(tweet.getBody());
-        viewHolder.tvTweetTimestamp.setText(tweet.getRelativeTimeAgo());
-        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivTweetImage);
+        viewHolder.tvItemUserName.setText(tweet.getFullName());
+        viewHolder.tvItemBody.setText(tweet.getBody());
+        viewHolder.tvItemTimestamp.setText(tweet.getRelativeTime());
+        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivItemImage);
 
         return convertView;
     }
 
     private static class ViewHolder {
-        TextView tvTweetUserName;
-        TextView tvTweetBody;
-        TextView tvTweetTimestamp;
-        ImageView ivTweetImage;
+        TextView tvItemUserName;
+        TextView tvItemBody;
+        TextView tvItemTimestamp;
+        ImageView ivItemImage;
     }
     
 }

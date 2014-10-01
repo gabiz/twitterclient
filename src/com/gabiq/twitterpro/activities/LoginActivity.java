@@ -1,4 +1,4 @@
-package com.gabiq.twitterpro;
+package com.gabiq.twitterpro.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.oauth.OAuthLoginActivity;
+import com.gabiq.twitterpro.R;
+import com.gabiq.twitterpro.TwitterRestClient;
+import com.gabiq.twitterpro.R.layout;
+import com.gabiq.twitterpro.R.menu;
 
 public class LoginActivity extends OAuthLoginActivity<TwitterRestClient> {
 
