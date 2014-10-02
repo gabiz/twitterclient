@@ -63,7 +63,7 @@ public class User extends Model implements Serializable {
 
 
     public String getScreenName() {
-        return screenName;
+        return "@"+screenName;
     }
 
 

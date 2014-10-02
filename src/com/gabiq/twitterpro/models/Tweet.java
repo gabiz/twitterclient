@@ -116,7 +116,7 @@ public class Tweet extends Model implements Serializable {
     
     public Spanned getFullName() {
         return Html.fromHtml("<b>" + user.getName() +
-                "</b><font color=\"#b0b0b0\"> @" + user.getScreenName() + "</font>");
+                "</b><font color=\"#b0b0b0\"> " + user.getScreenName() + "</font>");
     }
     
     public User getUser() {

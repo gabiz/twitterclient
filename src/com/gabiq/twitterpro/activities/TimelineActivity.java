@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,13 +21,15 @@ import com.gabiq.twitterpro.R;
 import com.gabiq.twitterpro.TwitterProApp;
 import com.gabiq.twitterpro.adapters.EndlessScrollListener;
 import com.gabiq.twitterpro.adapters.TimelineAdapter;
+import com.gabiq.twitterpro.fragments.ComposeFragment;
 import com.gabiq.twitterpro.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
-public class TimelineActivity extends FragmentActivity {
+public class TimelineActivity extends FragmentActivity implements
+ComposeFragment.OnTweetPostListener {
     private ArrayList<Tweet> tweets;
     private TimelineAdapter aTimeline;
     private PullToRefreshListView lvTimeline;
@@ -44,8 +47,13 @@ public class TimelineActivity extends FragmentActivity {
         setContentView(R.layout.activity_timeline);
 
         tweets = new ArrayList<Tweet>();
-        lvTimeline = (PullToRefreshListView) findViewById(R.id.lvTimeline);
         aTimeline = new TimelineAdapter(this, tweets);
+        setupListView();
+        fetchFromDB();
+    }
+
+    private void setupListView() {
+        lvTimeline = (PullToRefreshListView) findViewById(R.id.lvTimeline);
         lvTimeline.setAdapter(aTimeline);
         lvTimeline.setOnScrollListener(new EndlessScrollListener() {
             @Override
@@ -71,26 +79,12 @@ public class TimelineActivity extends FragmentActivity {
                         DetailActivity.class);
                 Tweet tweet = tweets.get(position);
                 i.putExtra("tweet", tweet);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_CODE);
                 return false;
             }
-//            @Override
-//            public void onItemLongClick(AdapterView<?> parent, View view,
-//                    int position, long id) {
-//                Log.d("INFO", "*********************** clicked");
-//                Intent i = new Intent(TimelineActivity.this,
-//                        DetailActivity.class);
-//                Tweet tweet = tweets.get(position);
-//                i.putExtra("tweet", tweet);
-//                startActivity(i);
-//            }
         });
-
-//        fetchHomeTimeline();
-        
-        fetchFromDB();
     }
-
+    
     private void fetchFromDB() {
         List<Tweet> newTweets = Tweet.recentItems();
         if (newTweets.size() > 0) {
@@ -105,7 +99,7 @@ public class TimelineActivity extends FragmentActivity {
         aTimeline.addAll(newTweets);
         initialized = true;
     }
-    
+
     protected void loadTweets(final long maxId, final long sinceId) {
         Log.d("INFO",
                 "******************* load tweets maxId="
@@ -196,15 +190,14 @@ public class TimelineActivity extends FragmentActivity {
     }
 
     public void onComposeAction(MenuItem mi) {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeFragment composeFragment = ComposeFragment
+                .newInstance();
+        composeFragment.show(fm, "fragment_compose");
 
-        Log.d("INFO", "********************** compose");
-        // FragmentManager fm = getSupportFragmentManager();
-        // ComposeFragment composeFragment =
-        // ComposeFragment.newInstance("Some Title");
-        // composeFragment.show(fm, "fragment_compose");
-
-        Intent i = new Intent(this, ComposeActivity.class);
-        startActivityForResult(i, REQUEST_CODE);
+        // Activity version
+        // Intent i = new Intent(this, ComposeActivity.class);
+        // startActivityForResult(i, REQUEST_CODE);
 
     }
 
@@ -216,6 +209,14 @@ public class TimelineActivity extends FragmentActivity {
                 aTimeline.insert(tweet, 0);
                 sinceId = tweet.getUid();
             }
+        }
+    }
+    
+    @Override
+    public void onTweetPost(Tweet tweet) {
+        if (tweet != null) {
+            aTimeline.insert(tweet, 0);
+            sinceId = tweet.getUid();
         }
     }
 }

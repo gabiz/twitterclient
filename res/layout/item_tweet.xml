@@ -11,8 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_launcher" />
+        android:layout_marginTop="10dp" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
@@ -52,6 +51,16 @@
             android:text="@string/timestamp_label"
             android:textColor="#b0b0b0"
             android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivItemEntityImage"
+            android:layout_width="wrap_content"
+            android:layout_height="140dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerCrop"
+            android:layout_margin="6dp"
+            android:layout_below="@+id/tvItemBody" />
     </RelativeLayout>
 
 </RelativeLayout>

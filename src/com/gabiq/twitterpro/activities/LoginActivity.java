@@ -10,8 +10,6 @@ import android.widget.Toast;
 import com.codepath.oauth.OAuthLoginActivity;
 import com.gabiq.twitterpro.R;
 import com.gabiq.twitterpro.TwitterRestClient;
-import com.gabiq.twitterpro.R.layout;
-import com.gabiq.twitterpro.R.menu;
 
 public class LoginActivity extends OAuthLoginActivity<TwitterRestClient> {
 
@@ -19,6 +17,7 @@ public class LoginActivity extends OAuthLoginActivity<TwitterRestClient> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		getActionBar().hide();
 	}
 
 	// Inflate the menu; this adds items to the action bar if it is present.

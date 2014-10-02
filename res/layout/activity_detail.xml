@@ -68,7 +68,31 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/tvTweetTimestamp"
-        android:src="@drawable/compose" />
+        android:layout_below="@+id/tvTweetTimestamp" />
+
+    <Button
+        android:id="@+id/bnTweetReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/btn_blue"
+        android:textColor="#ffffff"
+        android:text="@string/reply_button_label" />
+
+    <EditText
+        android:id="@+id/etTweetReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bnTweetReply"
+        android:layout_alignBottom="@+id/bnTweetReply"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/bnTweetReply"
+        android:hint="@string/tweet_reply_hint"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

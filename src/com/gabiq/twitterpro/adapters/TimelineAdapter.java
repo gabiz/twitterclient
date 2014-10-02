@@ -34,6 +34,7 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvItemBody = (TextView) convertView.findViewById(R.id.tvItemBody);
             viewHolder.tvItemTimestamp = (TextView) convertView.findViewById(R.id.tvItemTimestamp);
             viewHolder.ivItemImage = (ImageView) convertView.findViewById(R.id.ivItemImage);
+            viewHolder.ivItemEntityImage = (ImageView) convertView.findViewById(R.id.ivItemEntityImage);
 
             convertView.setTag(viewHolder);
         } else {
@@ -46,6 +47,14 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvItemTimestamp.setText(tweet.getRelativeTime());
         ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivItemImage);
 
+        String url = tweet.getUrl();
+        if (url != null && url != "") {
+            ImageLoader.getInstance().displayImage(url, viewHolder.ivItemEntityImage);
+            viewHolder.ivItemEntityImage.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.ivItemEntityImage.setVisibility(View.GONE);
+        }
+
         return convertView;
     }
 
@@ -54,6 +63,7 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
         TextView tvItemBody;
         TextView tvItemTimestamp;
         ImageView ivItemImage;
+        ImageView ivItemEntityImage;
     }
     
 }
