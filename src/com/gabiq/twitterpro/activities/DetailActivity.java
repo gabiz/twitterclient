@@ -93,6 +93,7 @@ public class DetailActivity extends Activity {
                     public void onSuccess(JSONObject json) {
                         Intent data = new Intent();
                         Tweet tweet = Tweet.fromJSON(json);
+                        tweet.save();
                         if (tweet != null) {
                             data.putExtra("tweet", tweet);
                         }
