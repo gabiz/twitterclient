@@ -22,6 +22,61 @@ import com.activeandroid.annotation.Column.ForeignKeyAction;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
+// JSON of Tweet Example
+
+//{
+//    "created_at": "Sat Oct 04 17:00:51 +0000 2014",
+//    "id": 518445658466816000,
+//    "id_str": "518445658466816000",
+//    "text": "Gillmor Gang: Good Vibrations II http://t.co/d6W9AKMsAi by @stevegillmor",
+//    "source": "<a href="http://10up.com" rel="nofollow">10up Publish Tweet</a>",
+//    "truncated": false,
+//    "in_reply_to_status_id": null,
+//    "in_reply_to_status_id_str": null,
+//    "in_reply_to_user_id": null,
+//    "in_reply_to_user_id_str": null,
+//    "in_reply_to_screen_name": null,
+//    "user":  {},
+//    "geo": null,
+//    "coordinates": null,
+//    "place": null,
+//    "contributors": null,
+//    "retweet_count": 5,
+//    "favorite_count": 2,
+//    "entities":  {
+//      "hashtags":  [],
+//      "symbols":  [],
+//      "urls":  [
+//         {
+//          "url": "http://t.co/d6W9AKMsAi",
+//          "expanded_url": "http://tcrn.ch/1umSIpJ",
+//          "display_url": "tcrn.ch/1umSIpJ",
+//          "indices":  [
+//            33,
+//            55
+//          ]
+//        }
+//      ],
+//      "user_mentions":  [
+//         {
+//          "screen_name": "stevegillmor",
+//          "name": "Steve Gillmor",
+//          "id": 1454021,
+//          "id_str": "1454021",
+//          "indices":  [
+//            59,
+//            72
+//          ]
+//        }
+//      ]
+//    },
+//    "favorited": false,
+//    "retweeted": false,
+//    "possibly_sensitive": false,
+//    "lang": "en"
+//  },
+
+
 @Table(name = "Tweets")
 public class Tweet extends Model implements Serializable {
 
@@ -41,6 +96,14 @@ public class Tweet extends Model implements Serializable {
 
     @Column(name = "url")
     private String url;
+    
+    
+    @Column(name = "retweetCount")
+    private int retweetCount;
+
+    @Column(name = "favoriteCount")
+    private int favoriteCount;
+    
     
     public Tweet(){
        super();
@@ -170,7 +233,6 @@ public class Tweet extends Model implements Serializable {
             Date date = sf.parse(createdAt);
             return new SimpleDateFormat("hh:mm aaa á dd MMM yy").format(date);
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return "";
         }

@@ -5,31 +5,31 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <ImageView
-        android:id="@+id/ivProfileImage"
+        android:id="@+id/ivComposeImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp" />
 
     <TextView
-        android:id="@+id/tvProfileName"
+        android:id="@+id/tvComposeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_toRightOf="@+id/ivComposeImage"
         android:text=""
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tvProfileUserName"
+        android:id="@+id/tvComposeUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvProfileName"
-        android:layout_below="@+id/tvProfileName"
+        android:layout_alignLeft="@+id/tvComposeName"
+        android:layout_below="@+id/tvComposeName"
         android:layout_marginTop="5dp"
         android:text=""
         android:textColor="#a0a0a0"
@@ -71,5 +71,14 @@
         android:layout_toLeftOf="@+id/bnPostTweet"
         android:text="140"
         android:textSize="18sp" />
+
+    <ProgressBar
+        android:id="@+id/pbTweetPostLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

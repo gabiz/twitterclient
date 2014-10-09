@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+   <item android:id="@+id/svSearch"
+          android:orderInCategory="5"
+          android:title="Search"
+          android:icon="@drawable/compose"
+          android:showAsAction="ifRoom|collapseActionView"
+          android:actionViewClass="android.widget.SearchView" />
+    
+    <item
+        android:id="@+id/miProfile"
+        android:showAsAction="ifRoom"
+        android:title="Profile">
+    </item>
+    
     <item
         android:id="@+id/miCompose"
         android:icon="@drawable/compose"
         android:showAsAction="ifRoom"
-        android:title="Compose"
-        android:onClick="onComposeAction">
+        android:title="Compose">
     </item>
 
 </menu>

@@ -1,222 +1,130 @@
 package com.gabiq.twitterpro.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.gabiq.twitterpro.ActionBarListener;
 import com.gabiq.twitterpro.R;
-import com.gabiq.twitterpro.TwitterProApp;
-import com.gabiq.twitterpro.adapters.EndlessScrollListener;
-import com.gabiq.twitterpro.adapters.TimelineAdapter;
 import com.gabiq.twitterpro.fragments.ComposeFragment;
+import com.gabiq.twitterpro.fragments.MentionsFragment;
+import com.gabiq.twitterpro.fragments.TimelineFragment;
 import com.gabiq.twitterpro.models.Tweet;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import eu.erikw.PullToRefreshListView;
-import eu.erikw.PullToRefreshListView.OnRefreshListener;
-
-public class TimelineActivity extends FragmentActivity implements
-ComposeFragment.OnTweetPostListener {
-    private ArrayList<Tweet> tweets;
-    private TimelineAdapter aTimeline;
-    private PullToRefreshListView lvTimeline;
-
-    private static boolean initialized = false;
-    private static boolean refreshing = false;
-    private static long maxId = 0;
-    private static long sinceId = 0;
-
-    private final int REQUEST_CODE = 20;
-
+public class TimelineActivity extends SherlockFragmentActivity implements
+        ComposeFragment.OnTweetPostListener {
+    private SearchView searchView;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        tweets = new ArrayList<Tweet>();
-        aTimeline = new TimelineAdapter(this, tweets);
-        setupListView();
-        fetchFromDB();
+        setupTabs();
     }
 
-    private void setupListView() {
-        lvTimeline = (PullToRefreshListView) findViewById(R.id.lvTimeline);
-        lvTimeline.setAdapter(aTimeline);
-        lvTimeline.setOnScrollListener(new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                loadTweets(maxId, 0);
-            }
-        });
+    private void setupTabs() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
 
-        lvTimeline.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshing = true;
-                fetchNewTweets();
-            }
-        });
+        Tab tabFirst = actionBar
+                .newTab()
+                .setText("Home")
+                // .setIcon(R.drawable.ic_launcher)
+                .setTabListener(
+                        new ActionBarListener<TimelineFragment>(
+                                R.id.flContainer, this, "timeline",
+                                TimelineFragment.class));
 
-        lvTimeline.setOnItemLongClickListener(new OnItemLongClickListener() {
+        actionBar.addTab(tabFirst);
+        actionBar.selectTab(tabFirst);
 
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-                Intent i = new Intent(TimelineActivity.this,
-                        DetailActivity.class);
-                Tweet tweet = tweets.get(position);
-                i.putExtra("tweet", tweet);
-                startActivityForResult(i, REQUEST_CODE);
-                return false;
-            }
-        });
-    }
-    
-    private void fetchFromDB() {
-        List<Tweet> newTweets = Tweet.recentItems();
-        if (newTweets.size() > 0) {
-            Tweet lastTweet = newTweets.get(newTweets.size() - 1);
-            maxId = lastTweet.getUid();
+        Tab tabSecond = actionBar
+                .newTab()
+                .setText("@ Mentions")
+                // .setIcon(R.drawable.ic_launcher)
+                .setTabListener(
+                        new ActionBarListener<MentionsFragment>(
+                                R.id.flContainer, this, "mentions",
+                                MentionsFragment.class));
 
-            if (sinceId == 0) {
-                Tweet firstTweet = newTweets.get(0);
-                sinceId = firstTweet.getUid();
-            }
-        }
-        aTimeline.addAll(newTweets);
-        initialized = true;
-    }
-
-    protected void loadTweets(final long maxId, final long sinceId) {
-        Log.d("INFO",
-                "******************* load tweets maxId="
-                        + String.valueOf(maxId) + " sinceId="
-                        + String.valueOf(sinceId));
-
-        TwitterProApp.getRestClient().getHomeTimeline(maxId, sinceId,
-                new JsonHttpResponseHandler() {
-
-                    @Override
-                    protected void handleFailureMessage(Throwable e,
-                            String message) {
-                        Log.e("ERROR", "Error loading tweets " + e.toString()
-                                + " : " + message);
-
-                        Toast.makeText(TimelineActivity.this, message,
-                                Toast.LENGTH_LONG);
-                        if (refreshing) {
-                            lvTimeline.onRefreshComplete();
-                            refreshing = false;
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable e, JSONArray arg1) {
-                        // Toast.makeText(this,
-                        // "Error retrieving twitter timeline",
-                        // Toast.LENGTH_SHORT);
-                        Log.e("ERROR",
-                                "******************* Error loading tweets");
-                        Toast.makeText(TimelineActivity.this,
-                                "Error loading tweets", Toast.LENGTH_LONG);
-                        if (refreshing) {
-                            lvTimeline.onRefreshComplete();
-                            refreshing = false;
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess(int arg0, JSONArray json) {
-                        Log.d("INFO", "******************* loaded tweets");
-                        ArrayList<Tweet> newTweets = Tweet.fromJSONArray(json);
-
-                        if (sinceId != 0) {
-                            // this is not more
-                            for (int i = newTweets.size() - 1; i >= 0; i--) {
-                                aTimeline.insert(newTweets.get(i), 0);
-                            }
-                        } else {
-                            aTimeline.addAll(newTweets);
-                        }
-                        // update maxId
-                        if (newTweets != null && !newTweets.isEmpty()) {
-                            Tweet lastTweet = newTweets.get(newTweets.size() - 1);
-                            TimelineActivity.maxId = lastTweet.getUid();
-
-                            if (sinceId != 0 || TimelineActivity.sinceId == 0) {
-                                Tweet firstTweet = newTweets.get(0);
-                                TimelineActivity.sinceId = firstTweet.getUid();
-                            }
-                        }
-
-                        if (refreshing) {
-                            lvTimeline.onRefreshComplete();
-                            refreshing = false;
-                        }
-
-                    }
-                });
-    }
-
-    private void fetchHomeTimeline() {
-        maxId = 0;
-        sinceId = 0;
-        aTimeline.clear();
-        loadTweets(0, 0);
-    }
-
-    private void fetchNewTweets() {
-        loadTweets(0, sinceId);
+        actionBar.addTab(tabSecond);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.timeline, menu);
-        return true;
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.timeline, menu);
+        
+//        MenuItem searchItem = menu.findItem(R.id.svSearch);
+//        searchView = (SearchView) searchItem.getActionView();
+//        searchView.setOnQueryTextListener(new OnQueryTextListener() {
+//           @Override
+//           public boolean onQueryTextSubmit(String query) {
+//                // perform query here
+//                return true;
+//           }
+//
+//           @Override
+//           public boolean onQueryTextChange(String newText) {
+//               return false;
+//           }
+//       });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
-    public void onComposeAction(MenuItem mi) {
-        FragmentManager fm = getSupportFragmentManager();
-        ComposeFragment composeFragment = ComposeFragment
-                .newInstance();
-        composeFragment.show(fm, "fragment_compose");
-
-        // Activity version
-        // Intent i = new Intent(this, ComposeActivity.class);
-        // startActivityForResult(i, REQUEST_CODE);
-
-    }
+    // @Override
+    // public boolean onCreateOptionsMenu(Menu menu) {
+    // // Inflate the menu; this adds items to the action bar if it is present.
+    // getMenuInflater().inflate(R.menu.timeline, menu);
+    // return true;
+    // }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            Tweet tweet = (Tweet) data.getExtras().get("tweet");
-            if (tweet != null) {
-                aTimeline.insert(tweet, 0);
-                sinceId = tweet.getUid();
-            }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.svSearch:
+            return true;
+        case R.id.miCompose:
+            FragmentManager fm = getSupportFragmentManager();
+            ComposeFragment composeFragment = ComposeFragment.newInstance();
+            composeFragment.show(fm, "fragment_compose");
+            return true;
+        case R.id.miProfile:
+            Intent i = new Intent(this, ProfileActivity.class);
+            startActivity(i);
+            return true;
+
         }
+        return false;
     }
-    
+
     @Override
     public void onTweetPost(Tweet tweet) {
-        if (tweet != null) {
-            aTimeline.insert(tweet, 0);
-            sinceId = tweet.getUid();
-        }
     }
+
+    // public void onComposeAction(MenuItem mi) {
+    // FragmentManager fm = getSupportFragmentManager();
+    // ComposeFragment composeFragment = ComposeFragment
+    // .newInstance();
+    // composeFragment.show(fm, "fragment_compose");
+    //
+    // // Activity version
+    // // Intent i = new Intent(this, ComposeActivity.class);
+    // // startActivityForResult(i, REQUEST_CODE);
+    //
+    // }
+
 }
