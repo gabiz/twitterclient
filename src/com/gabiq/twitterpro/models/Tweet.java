@@ -81,6 +81,10 @@ import com.activeandroid.query.Select;
 public class Tweet extends Model implements Serializable {
 
     private static final long serialVersionUID = 4249504467131192979L;
+
+    public enum Feed {
+        TIMELINE, MENTIONS, PROFILE
+    }
     
     @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     private long uid;
@@ -104,13 +108,15 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "favoriteCount")
     private int favoriteCount;
     
+    @Column(name = "feed")
+    private Feed feed;
     
     public Tweet(){
        super();
     }
 
     
-    public static Tweet fromJSON(JSONObject jsonObject) {
+    public static Tweet fromJSON(Feed feed, JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         
         try {
@@ -124,6 +130,7 @@ public class Tweet extends Model implements Serializable {
             } else {
                 tweet.user = newUser;
             }
+            tweet.feed = feed;
             
             tweet.user.save();
             
@@ -143,7 +150,7 @@ public class Tweet extends Model implements Serializable {
         return tweet;
     }
 
-    public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray) {
+    public static ArrayList<Tweet> fromJSONArray(Feed feed, JSONArray jsonArray) {
         ArrayList<Tweet> tweets = new ArrayList<Tweet>(jsonArray.length());
 
         for (int i=0; i < jsonArray.length(); i++) {
@@ -155,7 +162,7 @@ public class Tweet extends Model implements Serializable {
                 continue;
             }
 
-            Tweet tweet = Tweet.fromJSON(tweetJson);
+            Tweet tweet = Tweet.fromJSON(feed, tweetJson);
             if (tweet != null) {
                 tweet.save();
                 tweets.add(tweet);
@@ -189,6 +196,8 @@ public class Tweet extends Model implements Serializable {
     public String getUrl() {
         return url;
     }
+    
+    
     public String getRelativeTime() {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
@@ -243,7 +252,7 @@ public class Tweet extends Model implements Serializable {
         return new Select().from(Tweet.class).where("uid = ?", uid).executeSingle();
     }
 
-    public static List<Tweet> recentItems() {
+    public static List<Tweet> recentItems(Feed feed) {
         return new Select().from(Tweet.class).orderBy("uid DESC").limit("25").execute();
     }
 

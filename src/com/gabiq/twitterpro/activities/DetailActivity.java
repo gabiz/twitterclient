@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.gabiq.twitterpro.R;
 import com.gabiq.twitterpro.TwitterProApp;
 import com.gabiq.twitterpro.models.Tweet;
+import com.gabiq.twitterpro.models.Tweet.Feed;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -92,7 +93,7 @@ public class DetailActivity extends Activity {
                     @Override
                     public void onSuccess(JSONObject json) {
                         Intent data = new Intent();
-                        Tweet tweet = Tweet.fromJSON(json);
+                        Tweet tweet = Tweet.fromJSON(Feed.TIMELINE, json);
                         tweet.save();
                         if (tweet != null) {
                             data.putExtra("tweet", tweet);

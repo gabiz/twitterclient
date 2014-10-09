@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.gabiq.twitterpro.TwitterProApp;
+import com.gabiq.twitterpro.models.Tweet.Feed;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 public class MentionsFragment extends TweetsListFragment {
@@ -24,4 +25,9 @@ public class MentionsFragment extends TweetsListFragment {
         TwitterProApp.getRestClient().getMentionsTimeline(maxId, sinceId, handler);
     }
 
+    @Override
+    protected Feed getType() {
+        return Feed.MENTIONS;
+    }
+    
 }

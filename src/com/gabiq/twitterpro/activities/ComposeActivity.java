@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.gabiq.twitterpro.R;
 import com.gabiq.twitterpro.TwitterProApp;
 import com.gabiq.twitterpro.models.Tweet;
+import com.gabiq.twitterpro.models.Tweet.Feed;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class ComposeActivity extends Activity {
@@ -81,7 +82,7 @@ public class ComposeActivity extends Activity {
                         Log.d("INFO", "******************* success posting tweet "+ json.toString());
 
                         Intent data = new Intent();
-                        Tweet tweet = Tweet.fromJSON(json);
+                        Tweet tweet = Tweet.fromJSON(Feed.TIMELINE, json);
                         if (tweet != null) {
                             data.putExtra("tweet", tweet);
                         }

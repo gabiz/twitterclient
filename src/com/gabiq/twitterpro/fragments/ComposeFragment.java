@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.gabiq.twitterpro.R;
 import com.gabiq.twitterpro.TwitterProApp;
 import com.gabiq.twitterpro.models.Tweet;
+import com.gabiq.twitterpro.models.Tweet.Feed;
 import com.gabiq.twitterpro.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -77,7 +78,7 @@ public class ComposeFragment extends DialogFragment {
                 .findViewById(R.id.tvComposeUserName);
         ivProfileImage = (ImageView) view.findViewById(R.id.ivComposeImage);
 
-        pbTweetPostLoading = (ProgressBar) getView().findViewById(
+        pbTweetPostLoading = (ProgressBar) view.findViewById(
                 R.id.pbTweetPostLoading);
 
         pbTweetPostLoading.setVisibility(ProgressBar.VISIBLE);
@@ -177,7 +178,7 @@ public class ComposeFragment extends DialogFragment {
                                         + json.toString());
 
                         pbTweetPostLoading.setVisibility(ProgressBar.INVISIBLE);
-                        Tweet tweet = Tweet.fromJSON(json);
+                        Tweet tweet = Tweet.fromJSON(Feed.TIMELINE, json);
                         tweet.save();
 
                         listener.onTweetPost(tweet);

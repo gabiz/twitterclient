@@ -1,6 +1,7 @@
 package com.gabiq.twitterpro.fragments;
 
 import com.gabiq.twitterpro.TwitterProApp;
+import com.gabiq.twitterpro.models.Tweet.Feed;
 import com.gabiq.twitterpro.models.User;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -17,4 +18,9 @@ public class UserTimelineFragment extends TweetsListFragment {
         this.user = user;
     }
     
+    @Override
+    protected Feed getType() {
+        return Feed.PROFILE;
+    }
+   
 }

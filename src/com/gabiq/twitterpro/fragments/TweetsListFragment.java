@@ -26,6 +26,7 @@ import com.gabiq.twitterpro.activities.DetailActivity;
 import com.gabiq.twitterpro.adapters.EndlessScrollListener;
 import com.gabiq.twitterpro.adapters.TimelineAdapter;
 import com.gabiq.twitterpro.models.Tweet;
+import com.gabiq.twitterpro.models.Tweet.Feed;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -59,7 +60,7 @@ public class TweetsListFragment extends SherlockFragment {
                 false);
 
         setupListView(view);
-        // fetchFromDB();
+        fetchFromDB();
 
         return view;
     }
@@ -77,8 +78,7 @@ public class TweetsListFragment extends SherlockFragment {
     }
 
     private void setupListView(View view) {
-        pbTweetsLoading = (ProgressBar) view.findViewById(
-                R.id.pbTweetsLoading);
+        pbTweetsLoading = (ProgressBar) view.findViewById(R.id.pbTweetsLoading);
         lvTimeline = (PullToRefreshListView) view.findViewById(R.id.lvTweets);
         lvTimeline.setAdapter(aTimeline);
         lvTimeline.setOnScrollListener(new EndlessScrollListener() {
@@ -88,7 +88,8 @@ public class TweetsListFragment extends SherlockFragment {
                     if (isNetworkAvailable()) {
                         loadTweets(maxId, 0);
                     } else {
-                        Toast.makeText(getActivity(), "@strings/network_error", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "@strings/network_error",
+                                Toast.LENGTH_SHORT);
                     }
                 }
             }
@@ -119,8 +120,17 @@ public class TweetsListFragment extends SherlockFragment {
 
     }
 
+    protected Feed getType() {
+        return Feed.TIMELINE;
+    }
+
     private void fetchFromDB() {
-        List<Tweet> newTweets = Tweet.recentItems();
+        if (getType() != Feed.PROFILE) {
+            // not handling yet different user profiles
+            return;
+        }
+        
+        List<Tweet> newTweets = Tweet.recentItems(getType());
         if (newTweets.size() > 0) {
             Tweet lastTweet = newTweets.get(newTweets.size() - 1);
             maxId = lastTweet.getUid();
@@ -145,7 +155,9 @@ public class TweetsListFragment extends SherlockFragment {
                         + String.valueOf(maxId) + " sinceId="
                         + String.valueOf(sinceId));
 
-        pbTweetsLoading.setVisibility(ProgressBar.VISIBLE);
+        if (!refreshing) {
+            pbTweetsLoading.setVisibility(ProgressBar.VISIBLE);
+        }
         getTweets(maxId, sinceId, new JsonHttpResponseHandler() {
 
             @Override
@@ -178,7 +190,8 @@ public class TweetsListFragment extends SherlockFragment {
             public void onSuccess(int arg0, JSONArray json) {
                 Log.d("INFO", "******************* loaded tweets");
 
-                ArrayList<Tweet> newTweets = Tweet.fromJSONArray(json);
+                ArrayList<Tweet> newTweets = Tweet.fromJSONArray(getType(),
+                        json);
 
                 if (sinceId != 0) {
                     // this is not more
@@ -213,11 +226,12 @@ public class TweetsListFragment extends SherlockFragment {
         maxId = 0;
         sinceId = 0;
         aTimeline.clear();
-        
+
         if (isNetworkAvailable()) {
             loadTweets(0, 0);
         } else {
-            Toast.makeText(getActivity(), "@strings/network_error", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "@strings/network_error",
+                    Toast.LENGTH_SHORT);
         }
     }
 
@@ -225,29 +239,20 @@ public class TweetsListFragment extends SherlockFragment {
         loadTweets(0, sinceId);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-        // Tweet tweet = (Tweet) data.getExtras().get("tweet");
-        // if (tweet != null) {
-        // aTimeline.insert(tweet, 0);
-        // sinceId = tweet.getUid();
-        // }
-        // }
-    }
-
-    public void onTweetPost(Tweet tweet) {
+    public void insertTweet(Tweet tweet) {
         if (tweet != null) {
             aTimeline.insert(tweet, 0);
             sinceId = tweet.getUid();
         }
     }
-    
+
     private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager 
-              = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity()
+                .getSystemService(getActivity().CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager
+                .getActiveNetworkInfo();
+        return activeNetworkInfo != null
+                && activeNetworkInfo.isConnectedOrConnecting();
     }
 
 }

@@ -3,6 +3,8 @@ package com.gabiq.twitterpro.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.gabiq.twitterpro.models.Tweet.Feed;
+
 public class TimelineFragment extends TweetsListFragment {
 
     @Override
@@ -17,11 +19,9 @@ public class TimelineFragment extends TweetsListFragment {
         super.onAttach(activity);
     }
 
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//            Bundle savedInstanceState) {
-//            return inflater.inflate(R.layout.fragment_tweets_list, container, false);
-//        }
-
-    
+    @Override
+    protected Feed getType() {
+        return Feed.TIMELINE;
+    }
     
 }

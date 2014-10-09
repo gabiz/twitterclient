@@ -21,6 +21,8 @@ import com.gabiq.twitterpro.models.Tweet;
 public class TimelineActivity extends SherlockFragmentActivity implements
         ComposeFragment.OnTweetPostListener {
     private SearchView searchView;
+    private static String TIMELINE_TAB_TAG = "timeline";
+    private static String  MENTIONS_TAB_TAG = "mentions";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +38,28 @@ public class TimelineActivity extends SherlockFragmentActivity implements
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
 
-        Tab tabFirst = actionBar
+        Tab tabTimeline = actionBar
                 .newTab()
                 .setText("Home")
                 // .setIcon(R.drawable.ic_launcher)
                 .setTabListener(
                         new ActionBarListener<TimelineFragment>(
-                                R.id.flContainer, this, "timeline",
+                                R.id.flContainer, this, TIMELINE_TAB_TAG,
                                 TimelineFragment.class));
 
-        actionBar.addTab(tabFirst);
-        actionBar.selectTab(tabFirst);
+        actionBar.addTab(tabTimeline);
+        actionBar.selectTab(tabTimeline);
 
-        Tab tabSecond = actionBar
+        Tab tabMentions = actionBar
                 .newTab()
                 .setText("@ Mentions")
                 // .setIcon(R.drawable.ic_launcher)
                 .setTabListener(
                         new ActionBarListener<MentionsFragment>(
-                                R.id.flContainer, this, "mentions",
+                                R.id.flContainer, this, MENTIONS_TAB_TAG,
                                 MentionsFragment.class));
 
-        actionBar.addTab(tabSecond);
+        actionBar.addTab(tabMentions);
     }
 
     @Override
@@ -95,8 +97,8 @@ public class TimelineActivity extends SherlockFragmentActivity implements
         super.onOptionsItemSelected(item);
         // Handle item selection
         switch (item.getItemId()) {
-        case R.id.svSearch:
-            return true;
+//        case R.id.svSearch:
+//            return true;
         case R.id.miCompose:
             FragmentManager fm = getSupportFragmentManager();
             ComposeFragment composeFragment = ComposeFragment.newInstance();
@@ -113,6 +115,11 @@ public class TimelineActivity extends SherlockFragmentActivity implements
 
     @Override
     public void onTweetPost(Tweet tweet) {
+        if (getSupportActionBar().getSelectedNavigationIndex() == 0) {
+            TimelineFragment timelineFragment = (TimelineFragment) getSupportFragmentManager().findFragmentByTag(TIMELINE_TAB_TAG);
+            timelineFragment.insertTweet(tweet);
+        }
+        
     }
 
     // public void onComposeAction(MenuItem mi) {
