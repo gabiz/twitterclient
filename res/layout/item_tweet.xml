@@ -58,9 +58,92 @@
             android:layout_height="140dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:scaleType="centerCrop"
+            android:layout_below="@+id/tvItemBody"
             android:layout_margin="6dp"
-            android:layout_below="@+id/tvItemBody" />
+            android:scaleType="centerCrop" />
+
+        <TableLayout
+            android:id="@+id/tlStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivItemEntityImage"
+            android:stretchColumns="*" >
+
+            <TableRow>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" >
+
+                    <ImageView
+                        android:id="@+id/ivCellReply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:alpha="0.7"
+                        android:src="@drawable/cell_reply" />
+
+                    <TextView
+                        android:id="@+id/tvCellReply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/ivCellReply"
+                        android:text=""
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" >
+
+                    <ImageView
+                        android:id="@+id/ivCellRetweet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:alpha="0.7"
+                        android:src="@drawable/cell_rt" />
+
+                    <TextView
+                        android:id="@+id/tvCellRetweet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/ivCellRetweet"
+                        android:text="5"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" >
+
+                    <ImageView
+                        android:id="@+id/ivCellStar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:alpha="0.7"
+                        android:src="@drawable/cell_star" />
+
+                    <TextView
+                        android:id="@+id/tvCellStar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/ivCellStar"
+                        android:text="7"
+                        android:textColor="@color/gray"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </TableRow>
+        </TableLayout>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -22,10 +22,10 @@
     </item>
 
     <item
-        android:id="@+id/miShare"
-        android:icon="@drawable/share"
+        android:id="@+id/miSearch"
+        android:icon="@drawable/search"
         android:showAsAction="always"
-        android:title="Share">
+        android:title="Search">
     </item>
 
 </menu>

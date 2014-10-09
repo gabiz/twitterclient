@@ -19,7 +19,8 @@
 
     <style name="MyCustomTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-    </style>
+        <item name="android:actionBarTabTextStyle">@style/ActionBarTabTextStyle</item>
+        </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">@color/blue</item>
@@ -31,7 +32,12 @@
     </style>
 
     <style name="MyActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ActionBarTabTextStyle" parent="Widget.Sherlock.ActionBar.TabText">
         <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CustomDialog" parent="@android:style/Theme.Holo.Light">

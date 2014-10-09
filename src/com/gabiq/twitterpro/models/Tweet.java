@@ -122,6 +122,9 @@ public class Tweet extends Model implements Serializable {
         try {
             tweet.body = jsonObject.getString("text");
             tweet.uid = jsonObject.getLong("id");
+            tweet.retweetCount = jsonObject.getInt("retweet_count");
+            tweet.favoriteCount = jsonObject.getInt("favorite_count");
+            
             tweet.createdAt = jsonObject.getString("created_at");
             User newUser = User.fromJSON(jsonObject.getJSONObject("user"));
             User savedUser = User.byId(newUser.getUid());
@@ -254,6 +257,38 @@ public class Tweet extends Model implements Serializable {
 
     public static List<Tweet> recentItems(Feed feed) {
         return new Select().from(Tweet.class).orderBy("uid DESC").limit("25").execute();
+    }
+
+
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+
+    public int getFavoriteCount() {
+        return favoriteCount;
+    }
+
+
+    public Feed getFeed() {
+        return feed;
+    }
+    
+    
+    public String getRetweetCountStr() {
+        if (retweetCount != 0) {
+            return String.valueOf(retweetCount);
+        } else {
+            return "";
+        }
+    }
+
+    public String getFavoriteCountStr() {
+        if (favoriteCount != 0) {
+            return String.valueOf(favoriteCount);
+        } else {
+            return "";
+        }
     }
 
 }

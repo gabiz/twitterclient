@@ -41,6 +41,8 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvItemTimestamp = (TextView) convertView.findViewById(R.id.tvItemTimestamp);
             viewHolder.ivItemImage = (ImageView) convertView.findViewById(R.id.ivItemImage);
             viewHolder.ivItemEntityImage = (ImageView) convertView.findViewById(R.id.ivItemEntityImage);
+            viewHolder.tvCellRetweet = (TextView) convertView.findViewById(R.id.tvCellRetweet);
+            viewHolder.tvCellStar = (TextView) convertView.findViewById(R.id.tvCellStar);
 
             viewHolder.ivItemImage.setOnClickListener(new View.OnClickListener() {
 
@@ -64,6 +66,8 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvItemUserName.setText(tweet.getFullName());
         viewHolder.tvItemBody.setText(tweet.getBody());
         viewHolder.tvItemTimestamp.setText(tweet.getRelativeTime());
+        viewHolder.tvCellRetweet.setText(tweet.getRetweetCountStr());
+        viewHolder.tvCellStar.setText(tweet.getFavoriteCountStr());
         ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivItemImage);
 
         String url = tweet.getUrl();
@@ -83,6 +87,8 @@ public class TimelineAdapter extends ArrayAdapter<Tweet> {
         TextView tvItemTimestamp;
         ImageView ivItemImage;
         ImageView ivItemEntityImage;
+        TextView tvCellRetweet;
+        TextView tvCellStar;
         User user;
     }
     

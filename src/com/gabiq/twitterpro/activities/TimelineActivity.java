@@ -41,7 +41,6 @@ public class TimelineActivity extends SherlockFragmentActivity implements
         Tab tabTimeline = actionBar
                 .newTab()
                 .setText("Home")
-                // .setIcon(R.drawable.ic_launcher)
                 .setTabListener(
                         new ActionBarListener<TimelineFragment>(
                                 R.id.flContainer, this, TIMELINE_TAB_TAG,
@@ -52,8 +51,7 @@ public class TimelineActivity extends SherlockFragmentActivity implements
 
         Tab tabMentions = actionBar
                 .newTab()
-                .setText("@ Mentions")
-                // .setIcon(R.drawable.ic_launcher)
+                .setText("Mentions")
                 .setTabListener(
                         new ActionBarListener<MentionsFragment>(
                                 R.id.flContainer, this, MENTIONS_TAB_TAG,
@@ -84,13 +82,6 @@ public class TimelineActivity extends SherlockFragmentActivity implements
 
         return super.onCreateOptionsMenu(menu);
     }
-
-    // @Override
-    // public boolean onCreateOptionsMenu(Menu menu) {
-    // // Inflate the menu; this adds items to the action bar if it is present.
-    // getMenuInflater().inflate(R.menu.timeline, menu);
-    // return true;
-    // }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
